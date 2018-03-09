@@ -54,6 +54,11 @@
    ..................................................
    - formatted BPI prices in dollars and cents
    __________________________________________________
+   Version 0.3.2 2018-03-09T12:29:12
+   ..................................................
+   - Refactored some variable names to make for
+     easier reading;
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -160,16 +165,16 @@ app.get('/compare', (req, res) => {
         .then(res => res.json())
         .then(yesterday => {
 
-          const yest_bpi = Object.entries(yesterday.bpi)[0];
-          const y_date = yest_bpi[0];
-          const y_bpi = yest_bpi[1];
+          const bpi_yester = Object.entries(yesterday.bpi)[0];
+          const date_yest = bpi_yester[0];
+          const bpi_yest = bpi_yester[1];
 
           const data_yesterday = {
-            date: y_date,
-            bpi: bpi_display.format(y_bpi),
+            date: date_yest,
+            bpi: bpi_display.format(bpi_yest),
           }
 
-          const diff = bpi_current - y_bpi;
+          const diff = bpi_current - bpi_yest;
 
           const bpiData = {
             today: data_today,
@@ -178,6 +183,7 @@ app.get('/compare', (req, res) => {
           }
 
           console.log('Yesterday\'s closing data:\n', data_yesterday);
+          console.log('Difference', diff);
 
           res.status(STATUS_SUCCESS);
           res.send(bpiData);
