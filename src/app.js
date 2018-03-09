@@ -28,6 +28,12 @@
    ..................................................
    - added fetch package; server runs
    __________________________________________________
+   Version 0.2.0 2018-03-09T10:18:46
+   ..................................................
+   - set up fetch to retrieve data from BPI real-time
+   - server responds to request and returns real-time
+     data;
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -97,19 +103,32 @@
  */
 
 const express = require('express');
-const fetch = require('fetch');
+const fetch = require('node-fetch');
 
 const PORT = 3030;
 const STATUS_SUCCESS = 200;
 const STATUS_NOT_FOUND = 404;
+
+const BPI_DATA_URL = 'https://api.coindesk.com/v1/bpi';
+const CURRENT_PRICE = 'currentprice.json';
+const HISTORICAL_PRICE = 'historical/close.json';
+const YESTERDAY = '?for=yesterday';
 
 const app = express();
 
 app.get('/compare', (req, res) => {
   console.log('You hit \'/compare\' route');
   console.log('RESPONSE:\n', res);
-  res.status(STATUS_SUCCESS);
-  res.send('/compare');
+
+  fetch(`${BPI_DATA_URL}/${CURRENT_PRICE}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+
+      res.status(STATUS_SUCCESS);
+      res.send(data);
+    })
+    .catch(err => error.log(`FETCH ERROR!!! ===> ${err}`));
 })
 
 
