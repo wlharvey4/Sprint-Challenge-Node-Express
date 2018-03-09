@@ -9,7 +9,8 @@
   "author": "Ivan Mora",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "fetch": "^1.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.1"

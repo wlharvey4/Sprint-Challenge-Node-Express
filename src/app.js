@@ -24,6 +24,10 @@
    ..................................................
    - server logs response with bare URL
    __________________________________________________
+   Version 0.1.3 2018-03-09T09:59:06
+   ..................................................
+   - added fetch package; server runs
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -93,6 +97,7 @@
  */
 
 const express = require('express');
+const fetch = require('fetch');
 
 const PORT = 3030;
 const STATUS_SUCCESS = 200;
