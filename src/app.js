@@ -50,6 +50,10 @@
    - processed all data; supplied response with data
      including difference;
    __________________________________________________
+   Version 0.3.1 2018-03-09T12:11:51
+   ..................................................
+   - formatted BPI prices in dollars and cents
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -130,6 +134,10 @@ const CURRENT_PRICE = 'currentprice.json';
 const HISTORICAL_PRICE = 'historical/close.json';
 const FOR_YESTERDAY = '?for=yesterday';
 
+const bpi_display = new Intl.NumberFormat('en-US',
+                                         { style: 'currency', currency: 'USD',
+                                           minimumFractionDigits: 2 });
+
 const app = express();
 
 app.get('/compare', (req, res) => {
@@ -139,9 +147,11 @@ app.get('/compare', (req, res) => {
     .then(res => res.json())
     .then(data => {
 
+      const bpi_current = data.bpi.USD.rate_float;
+
       const data_today = {
         datetime: data.time.updatedISO,
-        bpi: data.bpi.USD.rate_float,
+        bpi: bpi_display.format(bpi_current),
       }
 
       console.log('Today\'s data:\n', data_today);
@@ -156,15 +166,15 @@ app.get('/compare', (req, res) => {
 
           const data_yesterday = {
             date: y_date,
-            bpi: y_bpi,
+            bpi: bpi_display.format(y_bpi),
           }
 
-          const diff = data_today.bpi - data_yesterday.bpi;
+          const diff = bpi_current - y_bpi;
 
           const bpiData = {
             today: data_today,
             yesterday: data_yesterday,
-            difference: diff,
+            difference: bpi_display.format(diff),
           }
 
           console.log('Yesterday\'s closing data:\n', data_yesterday);
