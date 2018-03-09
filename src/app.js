@@ -12,6 +12,9 @@
    ..................................................
    - Added API reference information
    __________________________________________________
+   Version 0.1.0 2018-03-09T09:37:37
+   - set up server to run;
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -82,3 +85,14 @@
 
 const express = require('express');
 
+const PORT = 3030;
+
+const app = express();
+
+app.listen(PORT, (err) => {
+  if (err) {
+    error.log(`SERVER ERROR!!! ===> ${err}`);
+    exit(1);
+  }
+  console.log(`Server listening on PORT ${PORT}`);
+});
