@@ -40,6 +40,11 @@
      yesterday; server responds to request from user;
      returns both current data and yesterday's data.
    __________________________________________________
+   Version 0.2.2 2018-03-09T10:56:41
+   ..................................................
+   - extracted today's data and yesterday's data,
+     but still need to get bpi alone;
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -124,21 +129,35 @@ const app = express();
 
 app.get('/compare', (req, res) => {
   console.log('You hit \'/compare\' route');
-  console.log('RESPONSE:\n', res);
+  /* console.log('RESPONSE:\n', res);*/
 
   fetch(`${BPI_DATA_URL}/${CURRENT_PRICE}`)
     .then(res => res.json())
     .then(data => {
-      console.log('TODAY:\n', data);
+      /* console.log('TODAY:\n', data);*/
+
+      const data_today = {
+        datetime: data.time.updatedISO,
+        bpi: data.bpi.USD.rate_float,
+      }
+
+      console.log('Today\'s data: ', data_today);
 
       fetch(`${BPI_DATA_URL}/${HISTORICAL_PRICE}${FOR_YESTERDAY}`)
         .then(res => res.json())
-        .then(yesterday_data => {
-          console.log('YESTERDAY:\n', yesterday_data);
+        .then(yesterday => {
+          /* console.log('YESTERDAY:\n', yesterday);*/
+
+          const data_yesterday = {
+            datetime: yesterday.time.updatedISO,
+            bpi: yesterday.bpi,
+          }
+
+          console.log('Yesterday\'s closing data\n', data_yesterday);
 
           res.status(STATUS_SUCCESS);
-          res.send(data + yesterday_data);
-        });
+          res.send(data + data_yesterday);
+        })
     })
     .catch(err => error.log(`FETCH ERROR!!! ===> ${err}`));
 })
