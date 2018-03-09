@@ -18,7 +18,11 @@
    __________________________________________________
    Version 0.1.1 2018-03-09T09:48:36
    ..................................................
-   - server accepts hits on /compare
+   - server accepts hits on /compare;
+   __________________________________________________
+   Version 0.1.2 2018-03-09T09:52:56
+   ..................................................
+   - server logs response with bare URL
    __________________________________________________
  */
 
@@ -98,6 +102,7 @@ const app = express();
 
 app.get('/compare', (req, res) => {
   console.log('You hit \'/compare\' route');
+  console.log('RESPONSE:\n', res);
   res.status(STATUS_SUCCESS);
   res.send('/compare');
 })
