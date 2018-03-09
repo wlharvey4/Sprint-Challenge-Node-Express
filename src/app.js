@@ -34,6 +34,12 @@
    - server responds to request and returns real-time
      data;
    __________________________________________________
+   Version 0.2.1 2018-03-09T10:30:33
+   ..................................................
+   - set up fetch to retrieve data from BPI for
+     yesterday; server responds to request from user;
+     returns both current data and yesterday's data.
+   __________________________________________________
  */
 
 /* CoinDesk Bitcoin Price Index API
@@ -112,7 +118,7 @@ const STATUS_NOT_FOUND = 404;
 const BPI_DATA_URL = 'https://api.coindesk.com/v1/bpi';
 const CURRENT_PRICE = 'currentprice.json';
 const HISTORICAL_PRICE = 'historical/close.json';
-const YESTERDAY = '?for=yesterday';
+const FOR_YESTERDAY = '?for=yesterday';
 
 const app = express();
 
@@ -123,10 +129,16 @@ app.get('/compare', (req, res) => {
   fetch(`${BPI_DATA_URL}/${CURRENT_PRICE}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data);
+      console.log('TODAY:\n', data);
 
-      res.status(STATUS_SUCCESS);
-      res.send(data);
+      fetch(`${BPI_DATA_URL}/${HISTORICAL_PRICE}${FOR_YESTERDAY}`)
+        .then(res => res.json())
+        .then(yesterday_data => {
+          console.log('YESTERDAY:\n', yesterday_data);
+
+          res.status(STATUS_SUCCESS);
+          res.send(data + yesterday_data);
+        });
     })
     .catch(err => error.log(`FETCH ERROR!!! ===> ${err}`));
 })
