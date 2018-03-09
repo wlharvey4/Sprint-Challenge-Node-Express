@@ -13,7 +13,12 @@
    - Added API reference information
    __________________________________________________
    Version 0.1.0 2018-03-09T09:37:37
+   ..................................................
    - set up server to run;
+   __________________________________________________
+   Version 0.1.1 2018-03-09T09:48:36
+   ..................................................
+   - server accepts hits on /compare
    __________________________________________________
  */
 
@@ -86,8 +91,22 @@
 const express = require('express');
 
 const PORT = 3030;
+const STATUS_SUCCESS = 200;
+const STATUS_NOT_FOUND = 404;
 
 const app = express();
+
+app.get('/compare', (req, res) => {
+  console.log('You hit \'/compare\' route');
+  res.status(STATUS_SUCCESS);
+  res.send('/compare');
+})
+
+
+
+
+
+
 
 app.listen(PORT, (err) => {
   if (err) {
